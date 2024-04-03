@@ -32,10 +32,10 @@ string insert_symbol(string str, int& i, char c) {
 string refactor(const string& str) {
     string str_copy = str;
     for (int i = 0; i < str_copy.length(); i++) {
-        if (str_copy[i] == '-' && (i == 0 || (!isdigit(str_copy[i - 1]) && ((str_copy[i - 1] != ' ') || (str_copy[i + 1] != ' '))))) {
+        if (str_copy[i] == '-' && (i == 0 || (!isdigit(str_copy[i - 1]) && (str_copy[i - 1] != ')') && ((str_copy[i - 1] != ' ') || (str_copy[i + 1] != ' '))))) {
             str_copy[i] = '~';
         }
-        if (i != 0 && str_copy[i] == '(' && str_copy[i - 1] != '*') {
+        if (i != 0 && isdigit(str_copy[i - 1]) && str_copy[i] == '(' && str_copy[i - 1] != '*') {
             str_copy = insert_symbol(str_copy, i, '*');
         }
     }
@@ -239,7 +239,7 @@ string infixToPostfix(VectorLegacy<string> infix) {
     }
 
     // Возвращаем постфиксное выражение
-    cout << postfix << endl;
+    //cout << postfix << endl;
     return postfix;
 }
 
@@ -252,6 +252,7 @@ double infixCalculator(string equation) {
     string temp = equation;
     //Разделяем ее на значения
     VectorLegacy<string> array_elements = extractEverything(temp);
+    array_elements.print();
     //Тасуем значения для получения постфикса
     temp = infixToPostfix(array_elements);
     //Вычисляем в постфиксе
@@ -319,8 +320,9 @@ void test_calc() {
 
     //// Тестирование функции infixCalculator
     assert(infixCalculator("1+2*3-10/5") == 5);
-    assert(infixCalculator("1-(2*3)-15/5") == 19);
+    assert(infixCalculator("1-(2*3)-15/5") == -8);
     assert(infixCalculator("1+2*(3-4)/5") == 0.6);
-
+    assert(infixCalculator("10/-15*10.3+3-3-(-3)") == -3.866670);
+    assert(infixCalculator("23 * 50(20-10) / 5") == 2300);
     cout << "All tests passed!" << endl;
 }
