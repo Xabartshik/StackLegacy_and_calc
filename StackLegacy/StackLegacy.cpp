@@ -11,14 +11,14 @@
 #include <regex>
 #include <functional>
 #include <map>
-
+//Сделал Ошлаков Данил, ИВТ-22
 using namespace std;
 
 
 
 int main()
 {
-
+    test_calc();
 
 
     //Строка постфиксная

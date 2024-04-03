@@ -1,4 +1,5 @@
 #pragma once
+//Сделал Ошлаков Данил, ИВТ-22
 #include "ListLegacy.h"
 #include "VectorLegacy.h"
 template<typename T>

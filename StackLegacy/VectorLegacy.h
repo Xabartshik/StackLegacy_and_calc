@@ -211,11 +211,41 @@ public:
         m_capacity = m_size;
         m_data = new T[m_size];
         //
-        copy(list.begin(), list.end(), m_data);
+        //copy(list.begin(), list.end(), m_data);
+        size_t i = 0;
+        for (const auto& value : list) {
+            if constexpr (is_same_v<T, const char*>) {
+                m_data[i++] = reinterpret_cast<T>(value);
+            }
+            else {
+                m_data[i++] = value;
+            }
+        }
+
+
         //copy_n(list.begin(), m_size, m_data);
         m_sorted = isSorted();
         //memcpy(m_data, list.begin(), m_size * sizeof(T));
     }
+    //Конструктор с передачей элементов через список
+    //template <typename T>
+    //VectorLegacy(initializer_list<const char *> list) {
+    //    m_size = list.size();
+    //    m_capacity = m_size;
+    //    m_data = new T[m_size];
+    //    //
+    //    //copy(list.begin(), list.end(), m_data);
+    //    size_t i = 0;
+    //    for (const auto& value : list) {
+    //        push_back(value);
+    //    }
+
+
+    //    //copy_n(list.begin(), m_size, m_data);
+    //    m_sorted = isSorted();
+    //    //memcpy(m_data, list.begin(), m_size * sizeof(T));
+    //}
+
 
 
     // Конструктор с указанием размера. Если не указать, каким значением заполнять, заполнится 0
@@ -386,6 +416,8 @@ public:
 
         return true;
     }
+
+
 
     // Доступ к элементам через []
     T& operator[](size_t index) {
@@ -584,7 +616,10 @@ public:
         //Выводит последний элемент
         cout << "[";
         for (size_t i = 0; i < m_size; ++i) {
-            cout << m_data[i] << ", ";
+            cout << m_data[i];
+            if (i != m_size - 1) {
+                cout << ", ";
+            }
         }
         cout << "]" << endl;
     }
@@ -837,7 +872,7 @@ void test() {
         assert(v2[i] == 0);
     }
 
-    VectorLegacy<int> v3({ 1, 2, 3, 4, 5 });
+    VectorLegacy<int> v3{ 1, 2, 3, 4, 5 };
     assert(v3.size() == 5);
     assert(v3.capacity() == 5);
     assert(!v3.empty());
