@@ -105,7 +105,7 @@ VectorLegacy<string> extractEverything(const string& str) {
 
     string str_copy = refactor(str);
     //Паттерн числа. Может отрицательного, может дробного, может с запятой
-    regex pattern("(~?\\d+(\\.\\d+)?(,\\d+)?)|[+-/*\(\)\^]");
+    regex pattern("(~?\\d+(\\.\\d+)?(,\\d+)?)|[~+-/*\(\)\^]");
     //Константа итератора, который проходит от начала строки и до ее конца
     sregex_iterator it(str_copy.begin(), str_copy.end(), pattern);
     //Константа конца
@@ -126,8 +126,9 @@ VectorLegacy<string> extractEverything(const string& str) {
         }
         result.push_back(match);
         it++;
+        //cout << match << " ";
     }
-
+    //result.print();
     return result;
 }
 //Проверка на число
@@ -166,7 +167,10 @@ double postfixCalculator(string equation) {
         }
         else {
             operand2 = stod(stack.pop());
-            operand1 = stod(stack.pop());
+            if (!stack.is_empty())
+                operand1 = stod(stack.pop());
+            else
+                operand1 = 0;
             int index_del = -1;
             for (int i = 0; i < keys.size(); i++) {
                 if (keys[i] == token) {
@@ -174,7 +178,7 @@ double postfixCalculator(string equation) {
                     break;
                 }
             }
-            cout << delegates[index_del](operand1, operand2) << endl;
+
             stack.push(delegates[index_del](operand1, operand2));
         }
         index++;
@@ -252,7 +256,7 @@ double infixCalculator(string equation) {
     string temp = equation;
     //Разделяем ее на значения
     VectorLegacy<string> array_elements = extractEverything(temp);
-    array_elements.print();
+    //array_elements.print();
     //Тасуем значения для получения постфикса
     temp = infixToPostfix(array_elements);
     //Вычисляем в постфиксе
