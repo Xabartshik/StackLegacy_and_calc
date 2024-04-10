@@ -822,7 +822,7 @@ public:
     //Проверка на неравенство списков
     bool operator!=(const ListLegacy<T>& other) const {
         if (l_size != other.l_size) {
-            return false;
+            return true;
         }
 
         Node<T>* current1 = l_head;
