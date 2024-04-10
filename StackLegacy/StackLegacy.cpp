@@ -18,13 +18,14 @@ using namespace std;
 
 int main()
 {
+
     test_calc();
 
 
     //Строка постфиксная
     string str = "-30 2 / 6 - 5 -3 * +";
     //Строка инфиксная
-    string str2 = "((-(-3)))";
+    string str2 = "(-3+5)(2-1)";
     VectorLegacy<string> test = extractEverything(str2);
     VectorLegacy<string> characters = extractEverything(str);
     //cout << "Must be: " << endl;

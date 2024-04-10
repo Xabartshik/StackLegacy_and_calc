@@ -11,7 +11,7 @@
 #include <map>
 #include <cassert>
 using namespace std;
-//Вставляет символ в строку, сдвигая остальные элементы в право используя мемсру для большей эффективности
+//Вставляет символ в строку, сдвигая остальные элементы в право используя мемmove для большей эффективности
 string insert_symbol(string str, int& i, char c) {
     string newStr(str);  // Создать новую строку на основе исходной
 
@@ -28,21 +28,21 @@ string insert_symbol(string str, int& i, char c) {
 
     return newStr;
 }
-//Нормализация строки. Заменяет унарные минусы на тильду, добавляет где нужно * (между числом и "(")
+//Нормализация строки математического выражения. Заменяет унарные минусы на тильду, добавляет где нужно * (между числом и "(")
 string refactor(const string& str) {
     string str_copy = str;
     for (int i = 0; i < str_copy.length(); i++) {
         if (str_copy[i] == '-' && (i == 0 || (!isdigit(str_copy[i - 1]) && (str_copy[i - 1] != ')') && ((str_copy[i - 1] != ' ') || (str_copy[i + 1] != ' '))))) {
             str_copy[i] = '~';
         }
-        if (i != 0 && isdigit(str_copy[i - 1]) && str_copy[i] == '(' && str_copy[i - 1] != '*') {
+        if (i != 0 && (isdigit(str_copy[i - 1])  || (str_copy[i-1]==')')) && str_copy[i] == '(' && str_copy[i - 1] != '*') {
             str_copy = insert_symbol(str_copy, i, '*');
         }
     }
 
     return str_copy;
 }
-//Возвращает массив чисел в виде строк. Заменяет запятую на точку для правильности работы программы
+//Возвращает массив чисел в виде строк с числами. Принимает строку с математическим выражением. Заменяет запятую на точку для правильности работы программы
 VectorLegacy<string> extractNumbers(const string& str) {
     VectorLegacy<string> result;
     string str_copy = refactor(str);
@@ -63,6 +63,7 @@ VectorLegacy<string> extractNumbers(const string& str) {
         if (match.find(',') != string::npos) {
             match.replace(match.find(','), 1, ".");
         }
+
         if (match.find('~') != string::npos) {
             match.replace(match.find('~'), 1, "-");
         }
@@ -71,7 +72,7 @@ VectorLegacy<string> extractNumbers(const string& str) {
     }
     return result;
 }
-//Извлекает только операторы из строки, сохраняя их как массив строк
+//Извлекает только операторы из строки, сохраняя их как массив строк. Принимает строку с математическим выражением.
 VectorLegacy<string> extractOperators(const string& str) {
     VectorLegacy<string> result;
     //Паттерн числа. Может отрицательного, может дробного, может с запятой
@@ -99,7 +100,7 @@ VectorLegacy<string> extractOperators(const string& str) {
 }
 
 
-//Извлекает все из массива, будь то операторы, числа и прочее
+//Извлекает все из массива, будь то операторы, числа и прочее. Принимает строку с математическим выражением.
 VectorLegacy<string> extractEverything(const string& str) {
     VectorLegacy<string> result;
 
@@ -139,7 +140,7 @@ bool isNumber(string str) {
     return regex_match(str, pattern);
 }
 
-// Массив делегатов
+// Массив делегатов 
 vector<function<string(double, double)>> delegates = {
     [](double first, double second) { return to_string(first + second); },
     [](double first, double second) { return to_string(first - second); },
@@ -149,7 +150,8 @@ vector<function<string(double, double)>> delegates = {
 };
 // Массив строк
 vector<string> keys = { "+", "-", "*", "/", "^" };
-//Калькулятор, считающий в постфиксе. Принимает на вход значения в виде строки, запсианной постфиксом
+//Калькулятор, считающий в постфиксе. Принимает на вход значения в виде строки математического выражения, запсианной постфиксом. Принимает операции
+//"+", "-", "*", "/", "^" 
 double postfixCalculator(string equation) {
     //Память под стэк
     StackLegacy<string> stack;
@@ -203,8 +205,8 @@ unsigned precedence(string op) {
     }
 }
 
-// Функция для преобразования инфиксного выражения в постфиксное
-string infixToPostfix(VectorLegacy<string> infix) {
+// Функция для преобразования инфиксного математического выражения в постфиксное
+string infixToPostfix(const VectorLegacy<string> & infix) {
     // Стек для хранения операторов
     StackLegacy<string> operators;
     // Строка для хранения постфиксного выражения
@@ -247,7 +249,7 @@ string infixToPostfix(VectorLegacy<string> infix) {
     return postfix;
 }
 
-//Калькулятор, считающий в инфиксе. Принимает на вход значения в виде строки, запсианной инфиксом. 
+//Калькулятор, считающий математическое выражение в инфиксе. Принимает на вход значения в виде строки мат.выражения, запсианной инфиксом. 
 //Я написал переводчик в инфикс, поэтому оставить его без внимания было бы грехом.
 //Да и в конце концов, это не так уж и плохо, на решении двух задач сделать третью, разве нет?
 //Программист должен быть ленивым.
@@ -263,7 +265,7 @@ double infixCalculator(string equation) {
     double result = postfixCalculator(temp);
     return result;
 }
-
+//Тесты
 void test_calc() {
     // Тестирование функции extractNumbers
     initializer_list<string> test{ "1.2", "3.4", "5.6" };

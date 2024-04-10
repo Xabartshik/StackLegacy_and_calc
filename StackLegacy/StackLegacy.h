@@ -2,6 +2,7 @@
 //Сделал Ошлаков Данил, ИВТ-22
 #include "ListLegacy.h"
 #include "VectorLegacy.h"
+//Класс стэка, реализованный на двусязном списке
 template<typename T>
 class StackLegacy :
     private ListLegacy<T>
@@ -84,12 +85,12 @@ void test_stack() {
     // Создаем стек и проверяем, что он пуст
     StackLegacy<int> stack;
     assert(stack.is_empty());
-
+    assert(stack.peek() == 0);
+    assert(stack.pop() == 0);
     // Добавляем несколько элементов в стек и проверяем их наличие
     stack.push(1);
     assert(!stack.is_empty());
     assert(stack.peek() == 1);
-
     stack.push(2);
     assert(!stack.is_empty());
     assert(stack.peek() == 2);

@@ -288,7 +288,7 @@ public:
         l_size++;
     }
 
-    // Удаляет последний элемент из списка.
+    // Удаляет последний элемент из списка. Возвращает значение по умолчание
     T pop_back() {
         if (l_tail == nullptr) {
             return T();
@@ -769,7 +769,7 @@ public:
     //Указатель на начало списка
     T& begin() {
         if (l_head == nullptr) {
-            throw out_of_range("List is empty");
+            return T();
         }
 
         return l_head->n_data;
@@ -778,19 +778,24 @@ public:
     //Указатель на конец списка
     T& end() {
         if (l_tail == nullptr) {
-            throw out_of_range("List is empty");
+            return T();
         }
-
         return l_tail->n_data;
     }
 
     // Возвращает первый элемент списка
     T first() const{
+        if (l_head == nullptr) {
+            return T();
+        }
         return l_head->n_data;
     }
 
-    // Возвращает последний элемент списка
+    // Возвращает последний элемент списка. Бросает исключение, если пуст
     T last() const {
+        if (l_tail == nullptr) {
+            return T();
+        }
         return l_tail->n_data;
     }
     //--------------------------------------------------------------------------------------------------------------------------------------
